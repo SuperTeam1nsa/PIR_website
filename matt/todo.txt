@@ -1,0 +1,3 @@
+TODO:
+serveur: check envoie et validation du mail
+(//+ formulaire de modification data user (scores déjà modifiables)

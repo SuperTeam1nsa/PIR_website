@@ -1,0 +1,16 @@
+Options -MultiViews
+
+#autorise des urls sans extension de fichier en fin
+
+RewriteEngine On
+#prefixe
+RewriteBase /
+
+#la regle s'applique seulement si :
+#pas un dossier 
+RewriteCond %{REQUEST_FILENAME} !-d
+#pas un fichier 
+RewriteCond %{REQUEST_FILENAME} !-f
+
+#initialement le full path
+RewriteRule ^(.+)$ matt/public/index.php?url=$1 [QSA,L]
