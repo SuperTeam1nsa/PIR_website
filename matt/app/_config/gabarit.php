@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="RF">
     <link rel="shortcut icon" type="image/x-icon" href='<?php echo BASE_PATH."favicon.ico" ?>'>
-    <title>Saveurs d'Antan Collioure </title>
+    <title>PIR: voiture autonome  </title>
     <link rel="stylesheet" href="<?php echo BASE_PATH."css/style.css"; ?>" type="text/css">
 
     <!--<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">

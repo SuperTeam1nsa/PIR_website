@@ -13,4 +13,4 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 
 #initialement le full path
-RewriteRule ^(.+)$ matt/public/index.php?url=$1 [QSA,L]
+RewriteRule ^(.+)$ PIR_website/matt/public/index.php?url=$1 [QSA,L]

@@ -8,10 +8,7 @@ if (!isset ($_GET["action"])) {
 */
 
 class mainControleur {
-	private $modele;
-
 	public function __construct(){
-		$this->modele = new mainModele;
 	}
 
 	// fonctions
