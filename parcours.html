@@ -7,10 +7,13 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="../../../../favicon.ico">
-    <title> INSA autonomous car</title>
+    <title>Starter Template · Bootstrap</title>
+    
+    <!--Template based on URL below-->
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.3/examples/starter-template/">
 
-    <link href="https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cerulean/bootstrap.min.css" rel="stylesheet" integrity="sha384-C++cugH8+Uf86JbNOnQoBweHHAe/wVKN/mb0lTybu/NZ9sEYbd+BbbYtNpWYAsNP" crossorigin="anonymous">
-
+    <!-- Bootstrap core CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <!-- Place your stylesheet here-->
     <link href="/css/stylesheet.css" rel="stylesheet" type="text/css">
@@ -22,15 +25,61 @@
 
         <nav>
 
+            <p> Départ :  <span> </span> </p>
+
+            <p> Nombre de passagers : <span> </span> <p>
+
+
         </nav>
 
     </header>
     <div id="main" class="jumbotron container-fluid">
         <center>
-            <img src="ressources/plan_campus_insa.png" class="img-fluid" aria-label="" title="Plan de l'INSA Toulouse!">
+
+            <img src="img/plan.jpg" alt="Plan">
+
         </center>
+
+        <section>
+            <h1> Commande de la navette </h1>
+            <form method="post">
+
+                <label for="number_passengers"> Nombre de passagers </label>
+                <input type="number" name="number_passengers" />     
+
+                <label for="departure"> Départ </label>
+                <select name="departure">
+
+                    <option value="riquet"> Amphithéatre Riquet </option>
+                    <option value="fourier"> Amphithéatre Fourier </option>
+                    <option value="exam"> Salle d'examen </option>
+                </select>
+
+                <label for="destination"> Arrivée </label>
+                <select name="destination">
+
+                    <option value="riquet"> Amphithéatre Riquet </option>
+                    <option value="fourier"> Amphithéatre Fourier </option>
+                    <option value="exam"> Salle d'examen </option>
+
+                </select>       
+            
+
+        </section>
+        <section>
+
+            <h1> Informations : </h1>
+
+            <p> Temps estimé <span class="estimated_time"> </span> </p>
+
+            <p> Nombre de places disponibles : <span class="available_seats"> </span> <p>
+
+            <p> Attente estimée <span class="estimated_waiting_time"> </span> </p>
+
+            <p> Prochaine station : <span class="next_station"> </span> </p>
+
+        </section>
     </div>
-    <!-- FOOTER -->
     <footer class="container">
         <p class="float-right"><a href="#">Top ⇑</a></p>
         <p>&copy; 2020 PIR team </p>
