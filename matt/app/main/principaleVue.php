@@ -1,5 +1,7 @@
 <?php 
-    $corps='<br>
+require_once(dirname(__FILE__).'/CommandeVue.php');
+global $corps;
+$corps .='<br>
 <form>
    <div class="form-row">
             <div class="form-group col-md-3">

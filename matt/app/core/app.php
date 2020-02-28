@@ -23,7 +23,7 @@ class App {
 	public function __construct()
 	{
 		// base path local
-		define ('BASE_PATH', 'http://localhost/PIR%20website/PIR_website/matt/public/');
+		define ('BASE_PATH', 'http://localhost/PIR_website/matt/public/');
 		// traitement de l'URL
 		$url = $this->parseUrl();
 		// si le param 1 et le param 2 sont renseignés et que le param 1 est bien un module existant
