@@ -45,29 +45,30 @@
 
         <div class="container">
             <div class="row">
-                <div style="position:relative; left:0; top:0;" class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mb-3">
-                    <img style="z-index: 1; position:absolute; top:0; left:0;" src="ressources/plan_campus_insa.png" class="img-fluid" aria-label="" title="Plan de l'INSA Toulouse!">
+                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mb-3">
+                    <div>
+                        <img style="z-index: 1; " src="ressources/plan_campus_insa.png" class="img-fluid" aria-label="" title="Plan de l'INSA Toulouse!">
 
-                    <img id="position_car" style="z-index: 2; position:absolute; top:50px; left:0;" src="ressources/bus.png" class="img-fluid" aria-label="" title="Plan de l'INSA Toulouse!">
-
+                        <img id="position_car" style="z-index: 2; position:absolute; top:0px; left:0;" src="ressources/bus.png" class="img-fluid" aria-label="" title="Plan de l'INSA Toulouse!">
+                    </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mb-3">
-                    <section class="float-right">
+                    <section>
                         <h1> Commande de la navette </h1>
                         <form method="post">
 
-                            <label for="number_passengers"> Nombre de passagers </label>
-                            <input type="number" name="number_passengers" id="number_passengers" />
-
-                            <label for="departure"> Départ </label>
+                            <label for="number_passengers"> Nombre de passagers :</label>
+                            <input type="number" name="number_passengers" id="number_passengers" size="1" />
+                            <br>
+                            <label for="departure"> Départ :</label>
                             <select id="departure">
 
                                 <option value="riquet"> Amphithéatre Riquet </option>
                                 <option value="fourier"> Amphithéatre Fourier </option>
                                 <option value="exam"> Salle d'examen </option>
                             </select>
-
-                            <label for="destination"> Arrivée </label>
+                            <br>
+                            <label for="destination"> Arrivée :</label>
                             <select id="destination">
 
                                 <option value="riquet"> Amphithéatre Riquet </option>
@@ -81,15 +82,11 @@
                     <section>
 
                         <h1> Informations : </h1>
+                        <p> Temps estimé:<span id="estimated_time"> </span> </p>
+                        <p> Nombre de places disponibles : <span id="available_seats"> </span></p>
+                        <p> Attente estimée <span id="estimated_waiting_time"> </span> </p>
 
-                        <p> Temps estimé <span class="estimated_time"> </span> </p>
-
-                        <p> Nombre de places disponibles : <span class="available_seats"> </span>
-                            <p>
-
-                                <p> Attente estimée <span class="estimated_waiting_time"> </span> </p>
-
-                                <p> Prochaine station : <span class="next_station"> </span> </p>
+                        <p> Prochaine station : <span id="next_station"> </span> </p>
 
                     </section>
                 </div>
