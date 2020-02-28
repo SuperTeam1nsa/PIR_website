@@ -45,8 +45,10 @@
 
         <div class="container">
             <div class="row">
-                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mb-3">
-                    <img src="ressources/plan_campus_insa.png" class="img-fluid" aria-label="" title="Plan de l'INSA Toulouse!">
+                <div style="position:relative; left:0; top:0;" class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mb-3">
+                    <img style="z-index: 1; position:absolute; top:0; left:0;" src="ressources/plan_campus_insa.png" class="img-fluid" aria-label="" title="Plan de l'INSA Toulouse!">
+
+                    <img id="position_car" style="z-index: 2; position:absolute; top:50px; left:0;" src="ressources/bus.png" class="img-fluid" aria-label="" title="Plan de l'INSA Toulouse!">
 
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 mb-3">
@@ -106,9 +108,10 @@
         <p>&copy; 2020 PIR team </p>
         <!--&middot; -->
     </footer>
-    <script src="script/test.js"></script>
+    <script src="script/request.js"></script>
+    <script src="script/main.js"></script>
     <script>
-        synchronize();
+
 
     </script>
 
