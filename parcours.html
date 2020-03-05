@@ -58,7 +58,7 @@
                         <form method="post">
 
                             <label for="number_passengers"> Nombre de passagers :</label>
-                            <input type="number" name="number_passengers" id="number_passengers" size="1" />
+                            <input type="number" min="1" max="5" name="number_passengers" id="number_passengers" size="1" />
                             <br>
                             <label for="departure"> Départ :</label>
                             <select id="departure">
@@ -88,6 +88,8 @@
 
                         <p> Prochaine station : <span id="next_station"> </span> </p>
 
+                        <button> Commander </button>
+
                     </section>
                 </div>
             </div>
@@ -95,7 +97,7 @@
             <div>
                 <p>INFO : Consultation des capteurs Mobility_Lab </p>
             </div>
-
+            
 
 
         </div>
