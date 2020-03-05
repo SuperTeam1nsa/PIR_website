@@ -1,8 +1,14 @@
 var url = 'http://192.168.43.6:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_CMD/';
 var urls = 'http://192.168.43.6:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_SENSORS/';
 var cin = 'la';
-
-function del() {//alert("I'm in");
+module.exports = {
+    getGPS: function () {
+        //TODO
+        return [42, 58];
+    }
+};
+/*
+function del() { //alert("I'm in");
     // 1. Create a new XMLHttpRequest object
     let xhr = new XMLHttpRequest();
     //var body = "<m2m:cin xmlns:m2m='http://www.onem2m.org/xml/protocols' rn='cin_nav'><cnf>FORWARD</cnf><con>i</con></m2m:cin>";
@@ -22,9 +28,9 @@ function del() {//alert("I'm in");
         if (xhr.status != 200) { // analyze HTTP status of the response
             alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
         }
-        /*else { // show the result
-	    alert(`Done, got ${xhr.response}`); // responseText is the server
-	  }*/
+        //else { // show the result
+	    //alert(`Done, got ${xhr.response}`); // responseText is the server
+	 // }
 
     };
 
@@ -32,9 +38,9 @@ function del() {//alert("I'm in");
         if (event.lengthComputable) {
             alert(`Received ${event.loaded} of ${event.total} bytes`);
         }
-        /*else {
-	    alert(`Received ${event.loaded} bytes`); // no Content-Length
-	  }*/
+        //else {
+	  //  alert(`Received ${event.loaded} bytes`); // no Content-Length
+	  //}
 
     };
 
@@ -43,6 +49,8 @@ function del() {//alert("I'm in");
     };
 
 }
+
+
 
 function send_req(cnf, content) {
 
@@ -66,17 +74,17 @@ function send_req(cnf, content) {
         if (xhr.status != 200 && xhr.status != 201) { // analyze HTTP status of the response
             alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
         }
-        /*else { // show the result
-	    alert(`Done, got ${xhr.response}`); // responseText is the server
-	  }*/
+        //else { // show the result
+	    //alert(`Done, got ${xhr.response}`); // responseText is the server
+	  //}
     };
 
     xhr.onprogress = function (event) {
-        /*if (event.lengthComputable) {
-          alert(`Received ${event.loaded} of ${event.total} bytes`);
-        } else {
-          alert(`Received ${event.loaded} bytes`); // no Content-Length
-        }*/
+        //if (event.lengthComputable) {
+        //  alert(`Received ${event.loaded} of ${event.total} bytes`);
+        //} else {
+        //  alert(`Received ${event.loaded} bytes`); // no Content-Length
+        //}
 
     };
 
@@ -87,7 +95,7 @@ function send_req(cnf, content) {
 }
 
 
-/*for test1.html*/
+//for test1.html
 
 function generate_table() {
 
@@ -229,3 +237,4 @@ function test() {
     alert("TEST");
     move();
 }
+*/
