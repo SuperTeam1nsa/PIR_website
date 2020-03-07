@@ -1,0 +1,84 @@
+doctype html
+head
+  meta(charset='utf-8')
+  meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
+  meta(name='description' content='')
+  meta(name='author' content='')
+  link(rel='icon' href='http://localhost:8080/images/bus.png')
+  title #{title}
+  link(href='https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cerulean/bootstrap.min.css' rel='stylesheet' integrity='sha384-C++cugH8+Uf86JbNOnQoBweHHAe/wVKN/mb0lTybu/NZ9sEYbd+BbbYtNpWYAsNP' crossorigin='anonymous')
+  // Bootstrap core CSS
+  link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
+  // Place your stylesheet here
+  //link(href='/css/stylesheet.css' rel='stylesheet' type='text/css')
+header
+  nav
+    p
+      | D&eacute;part : 
+      span  
+    p
+      | Nombre de passagers : 
+      span  
+    p
+#myProgress
+  #myBar
+    p
+      a Synchronisation...
+    p
+#main.jumbotron.container-fluid
+  .container
+    .row
+      .col-lg-6.col-md-6.col-sm-12.col-xs-12.mb-3
+        div
+          img.img-fluid(style='z-index: 1; ' src='http://localhost:8080/images/plan_campus_insa.png' aria-label='' title="Plan de l'INSA Toulouse!")
+          img#position_car.img-fluid(style='z-index: 2; position:absolute; top:0px; left:0;' src='http://localhost:8080/images/bus.png' aria-label='' title="Plan de l'INSA Toulouse!")
+      .col-lg-6.col-md-6.col-sm-12.col-xs-12.mb-3
+        section
+          h1  Commande de la navette 
+          form(method='post')
+            label(for='number_passengers')  Nombre de passagers :
+            input#number_passengers(type='number' min='1' max='5' name='number_passengers' size='1')
+            br
+            label(for='departure')  D&eacute;part :
+            select#departure
+              option(value='riquet')  1-&gt; Amphith&eacute;atre Riquet 
+              option(value='riquet')  2-&gt; STPI 
+              option(value='fourier')  3-&gt; Amphith&eacute;atre Fourier 
+              option(value='exam')  4-&gt; Salle d&apos;examen 
+            br
+            label(for='destination')  Arriv&eacute;e :
+            select#destination
+              option(value='riquet')  1-&gt; Amphith&eacute;atre Riquet 
+              option(value='riquet')  2-&gt; STPI 
+              option(value='fourier')  3-&gt; Amphith&eacute;atre Fourier 
+              option(value='exam')  4-&gt; Salle d&apos;examen 
+        section
+          h1  Informations : 
+          p
+            | Temps estim&eacute; : 
+            span#estimated_time  
+          p
+            | Nombre de places disponibles : 
+            span#available_seats  
+          p
+            | Attente estim&eacute;e : 
+            span#estimated_waiting_time  
+          p
+            | Prochaine station : 
+            span#next_station  
+          button  Commander 
+    #GPS
+    #INFO
+      p INFO : Consultation des capteurs Mobility_Lab 
+      p!= INFO
+
+footer.container
+  p.float-right
+    a(href='#') Top 
+  p &copy; 2020 PIR team 
+  // &middot;
+script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous')
+script(src='http://localhost:8080/javascripts/main.js')
+script(src='http://localhost:8080/javascripts/station.js')
+script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous')
+script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous')
