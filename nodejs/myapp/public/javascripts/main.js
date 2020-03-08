@@ -5,13 +5,40 @@ script.src = 'http://code.jquery.com/jquery-1.11.0.min.js';
 script.type = 'text/javascript';
 document.getElementsByTagName('head')[0].appendChild(script);
 
-var myVar = setInterval(main, 1000);
+var myVar = setInterval(main, 2000);
 var px = 0;
 var py = 0;
 
 function main() {
     get_gps();
     maj_posi(px, py);
+}
+
+function send_req(cnf, content) {
+    $.ajax({
+        url: 'http://localhost:8080/command/' + cnf + '/' + content + '/42',
+        dataType: "json",
+        success: function (response) {
+            $('#RESULT_POST').html("Command result: " + response.data);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            $('#RESULT_POST').html("Error in sending command !");
+        }
+    });
+
+}
+
+function getCtes() {
+    $.ajax({
+        url: 'http://localhost:8080/ctes/',
+        dataType: "HTML",
+        success: function (response) {
+            $('#CTES').html(response);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            $('#CTES').html("Error in getting ctes !");
+        }
+    });
 }
 
 function get_gps() {
@@ -26,7 +53,7 @@ function get_gps() {
             $('#GPS').html("GPS: x : " + x + " y: " + y);
         },
         error: function (jqXHR, textStatus, errorThrown) {
-            alert(" NOK ");
+            //alert(" NOK ");
             $('#GPS').html(errorThrown);
         }
     });
@@ -39,4 +66,31 @@ function maj_posi(posix, posiy) {
     document.getElementById("position_car").style = "z-index: 2; position:absolute; top:" + posiy +
         "px; left:" + posix +
         "px;";
+}
+
+function keyCode(event) {
+    var x = event.keyCode;
+    if (x == 73) { // i key
+        send_req('FORWARD', 'i');
+    } else if (x == 85) { // u key
+        send_req('LEFT', 'u');
+    } else if (x == 79) { // o key
+        send_req('RIGHT', 'o');
+    } else if (x == 75) { // k key
+        send_req('BACKWARD', 'k');
+    } else if (x == 32) { //escape key
+        send_req('STOP', ' ');
+    } else if (x == 65) { //a key
+        send_req('SPEED+', 'a');
+    } else if (x == 90) { //z key
+        send_req('SPEED-', 'z');
+    } else if (x == 81) { //q key
+        send_req('ANGULAR+', 'q');
+    } else if (x == 83) { //s key
+        send_req('ANGULAR-', 's');
+    } else if (x == 87) { //w key
+        send_req('LINEAR+', 'w');
+    } else if (x == 88) { //x key
+        send_req('LINEAR-', 'x');
+    }
 }

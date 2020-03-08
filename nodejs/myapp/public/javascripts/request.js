@@ -11,13 +11,15 @@ It is not distributed with Node; you have to install it separately,
     var xhr = new XMLHttpRequest();
 That said, Node comes with the http module which is the normal tool for choice for making HTTP requests from Node. 
 */
+//rq: return always possible, but not good with asynchronous
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 module.exports = {
-    getGPS: function () {
+    getGPS: function (res) {
         //TODO
-        return [42, 58];
+        res.write('{"x":"' + 42 + '", "y":"' + 21 + '"}');
+        res.end();
     },
-    generate_table: function () {
+    generate_table: function (res) {
 
         var cntListe = ['localization_time', 'localization_valid', 'localization_accurate', 'path_time', 'path_lateral_error', 'path_orientation_error', 'remote_start', 'remote_manual', 'remote_buzzer', 'remote_door', 'supervisor_enabled', 'supervisor_run', 'supervisor_resume', 'carselector_auto', 'anticollision_stop', 'anticollision_warning', 'door_opened', 'door_error', 'safetyok', 'supervisor_emergency_io_steer_drive_aok', 'supervisor_emergency_car_time', 'supervisor_emergency_car_command', 'supervisor_emergency_car_speed', 'supervisor_emergency_car_steer', 'supervisor_emergency_steer_encoder_time', 'supervisor_emergency_left_encoder_time', 'supervisor_emergency_right_encoder_time', 'supervisor_pause_laser_time', 'supervisor_pause_door_closed', 'supervisor_enable_power', 'door_closed', 'pad_A', 'pad_B', 'parkingBrake_Released', 'remote_estop'];
         cntListe = cntListe.sort();
@@ -25,7 +27,7 @@ module.exports = {
         let rep = null;
         var regex = /<\//gi; //pour l'extraction du contenu
 
-        let xhr = new XMLHttpRequest();
+
 
         // get the reference for the tblBody
         /*var body = document.getElementsByID("INFO")[0];
@@ -40,56 +42,132 @@ module.exports = {
         for (var i = 0; i < cntListe.length; i++) {
 
             tableau += "<tr><td>" + cntListe[i] + "</td>";
+            var xhr = new XMLHttpRequest();
+            //envoyer des requetes de façon synchrone si false asynchrone autrement (best)
+            xhr.open('GET', 'http://192.168.43.6:8080/~/in-cse/in-name/MOBILITY_LAB/' + cntListe[i] + '/la/', true);
+            xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
+            xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
+            xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');
+            xhr.setRequestHeader('X-M2M-Origin', 'admin:admin');
+            xhr.setRequestHeader('Accept', 'application/xml');
 
-            //envoyer des requetes de façon synchrone to UNCOMMENT
-            /*  xhr.open('GET', 'http://192.168.43.6:8080/~/in-cse/in-name/MOBILITY_LAB/' + cntListe[i] + '/la/', false);
-              xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
-              xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
-              xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');
-              xhr.setRequestHeader('X-M2M-Origin', 'admin:admin');
-              xhr.setRequestHeader('Accept', 'application/xml');
-              xhr.send();
-              xhr.timeout = 500; // time in milliseconds
-              xhr.onload = function () {
-                  if (xhr.status != 200) { // analyze HTTP status of the response
-                      alert(`Error $ {
+            xhr.onerror = function () {
+                console.log("Ctes getting fail !");
+                tableau += "</th>";
+            };
+            //xhr.timeout = 500; // time in milliseconds
+            xhr.onload = function () {
+                if (xhr.status != 200) { // analyze HTTP status of the response
+                    console.log(`Error $ {
                               xhr.status
                           }
                           : + $ {
                               xhr.statusText
                           }`); //  e.g. 404: Not Found
-                  } else {
-                      rep = xhr.response;
-                      //alert(rep);
-                      rep = rep.replace(regex, '<');
-                      rep = rep.split('<con>');
-                      console.log(rep[1]);
+                } else {
+                    rep = xhr.response;
+                    //alert(rep);
+                    rep = rep.replace(regex, '<');
+                    rep = rep.split('<con>');
+                    console.log(rep[1]);
 
-                      // Create a <td> element and a text node, make the text
-                      // node the contents of the <td>, and put the <td> at
-                      // the end of the table row
-                      //  var cell = document.createElement("td");
-                      //    var cellText = document.createTextNode(rep[1]);
-                      tableau += "<td>" + rep[1] + "</td></th>";
-                      //cell.appendChild(cellText); // add the row to the end of the table body
-                      //tblBody.appendChild(row);
-                      //row.appendChild(cell);
-                  }
-              };
-              */
+                    // Create a <td> element and a text node, make the text
+                    // node the contents of the <td>, and put the <td> at
+                    // the end of the table row
+                    //  var cell = document.createElement("td");
+                    //    var cellText = document.createTextNode(rep[1]);
+                    tableau += "<td>" + rep[1] + "</td></th>";
+                    //cell.appendChild(cellText); // add the row to the end of the table body
+                    //tblBody.appendChild(row);
+                    //row.appendChild(cell);
+                }
+            };
+
             //TO DELETE in prod
-            tableau += "</th>";
+            //tableau += "</th>";
 
             // add the row to the end of the table body
             // tblBody.appendChild(row);
-        }
+
+
+            setTimeout(function () {
+                /* vs. a.timeout */
+                if (xhr.readyState < 4) {
+                    xhr.params = "has timeout :p";
+                    xhr.abort();
+                }
+            }, 5); //PROD : timeout: 1000 et pas 5
+            xhr.send();
+
+        } //for
         tableau += "</tbody></table>";
-        return tableau;
+        console.log("sending back data sensor !");
+        res.write(tableau);
+        res.end();
         // put the <tbody> in the <table>
         //tbl.appendChild(tblBody);
         // appends <table> into <body>
         //body.appendChild(tbl);
         // sets the border attribute of tbl to 2;
+    },
+    send_req: function (cnf, content, res) {
+        // 1. Create a new XMLHttpRequest object
+        let xhr = new XMLHttpRequest();
+
+        var body = "<m2m:cin xmlns:m2m='http://www.onem2m.org/xml/protocols'><cnf>" + cnf + "</cnf><con>" + content + "</con></m2m:cin>";
+        //fail
+        /* xhr.ontimeout = function () {
+             console.error("The request has timed out :" + `Error ${xhr.status}: ${xhr.statusText}`);
+             res.write('{"data":"false"}');
+             res.end();
+         };*/
+        // This will be called after the response is received
+        xhr.onload = function () {
+            if (xhr.status != 200 && xhr.status != 201) { // analyze HTTP status of the response
+                console.log(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
+                res.write('{"data":"false"}');
+            } else {
+                res.write('{"data":"true"}');
+            }
+            res.end();
+            //else { // show the result
+            //alert(`Done, got ${xhr.response}`); // responseText is the server
+            //}
+        };
+
+        // xhr.onprogress = function (event) {
+        //if (event.lengthComputable) {
+        //  alert(`Received ${event.loaded} of ${event.total} bytes`);
+        //} else {
+        //  alert(`Received ${event.loaded} bytes`); // no Content-Length
+        //}
+
+        // };
+
+        xhr.onerror = function () {
+            console.log("Request failed :" + `Error ${xhr.status}: ${xhr.statusText} ${xhr.params}`);
+            res.write('{"data":"false"}');
+            res.end();
+        };
+        xhr.open('POST', url, true);
+
+        //xhr.timeout = 500; //fail
+        //timeout au bout de 2s
+        setTimeout(function () {
+            /* vs. a.timeout */
+            if (xhr.readyState < 4) {
+                xhr.params = "has timeout :p";
+                xhr.abort();
+            }
+        }, 2000);
+        xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
+        xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
+        xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');
+        xhr.setRequestHeader('X-M2M-Origin', 'admin:admin');
+        xhr.setRequestHeader('Content-Type', 'application/xml;ty=4');
+
+        xhr.send(body);
+
     }
 };
 /*
@@ -137,47 +215,7 @@ function del() { //alert("I'm in");
 
 
 
-function send_req(cnf, content) {
 
-    // 1. Create a new XMLHttpRequest object
-    let xhr = new XMLHttpRequest();
-    var body = "<m2m:cin xmlns:m2m='http://www.onem2m.org/xml/protocols'><cnf>" + cnf + "</cnf><con>" + content + "</con></m2m:cin>";
-
-    // 2. Configure it: GET-request for the URL /article/.../load
-    xhr.open('POST', url);
-    xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
-    xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
-    xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');
-    xhr.setRequestHeader('X-M2M-Origin', 'admin:admin');
-    xhr.setRequestHeader('Content-Type', 'application/xml;ty=4');
-
-    // 3. Send the request over the network
-    xhr.send(body);
-
-    // 4. This will be called after the response is received
-    xhr.onload = function () {
-        if (xhr.status != 200 && xhr.status != 201) { // analyze HTTP status of the response
-            alert(`Error ${xhr.status}: ${xhr.statusText}`); // e.g. 404: Not Found
-        }
-        //else { // show the result
-	    //alert(`Done, got ${xhr.response}`); // responseText is the server
-	  //}
-    };
-
-    xhr.onprogress = function (event) {
-        //if (event.lengthComputable) {
-        //  alert(`Received ${event.loaded} of ${event.total} bytes`);
-        //} else {
-        //  alert(`Received ${event.loaded} bytes`); // no Content-Length
-        //}
-
-    };
-
-    xhr.onerror = function () {
-        alert("Request failed");
-    };
-
-}
 
 
 //for test1.html

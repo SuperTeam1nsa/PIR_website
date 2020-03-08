@@ -11,6 +11,7 @@ head
   link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
   // Place your stylesheet here
   //link(href='/css/stylesheet.css' rel='stylesheet' type='text/css')
+  body(onkeydown="keyCode(event)")
 header
   nav
     p
@@ -68,9 +69,49 @@ header
             span#next_station  
           button  Commander 
     #GPS
-    #INFO
-      p INFO : Consultation des capteurs Mobility_Lab 
-      p!= INFO
+    #RESULT_POST
+    #boutons  
+  .haut(onclick="send_req('FORWARD','i')")
+    p
+      a(href='#') FORWARD
+  .gauche(onclick="send_req('LEFT','u')")
+    p
+      a(href='#') LEFT
+  .droite(onclick="send_req('RIGHT','o')")
+    p
+      a(href='#') RIGHT
+  .bas(onclick="send_req('BACKWARD','k')")
+    p
+      a(href='#') BACKWARD
+  .A(onclick="send_req('SPEED+','a')" style='max-width: 12%;')
+    p
+      a(href='#') SPEED+
+  .Z(onclick="send_req('SPEED-','z')" style='max-width: 12%;')
+    p
+      a(href='#') SPEED-
+  .Q(onclick="send_req('ANGULAR+','q')" style='max-width: 12%;')
+    p
+      a(href='#') ANGULAR+
+  .S(onclick="send_req('ANGULAR-','s')" style='max-width: 12%;')
+    p
+      a(href='#') ANGULAR-
+  .W(onclick="send_req('LINEAR+','w')" style='max-width: 12%;')
+    p
+      a(href='#') LINEAR+
+  .X(onclick="send_req('LINEAR-','x')" style='max-width: 12%;')
+    p
+      a(href='#') LINEAR-
+  .Delete(onclick="send_req('STOP',' ')")
+    p
+      a(href='#') STOP
+      
+#CTES
+#INFO
+  .X(onclick="getCtes()")
+    p 
+      a(href='#') INFO : Consultation des capteurs Mobility_Lab 
+      //p!= INFO
+      
 
 footer.container
   p.float-right
