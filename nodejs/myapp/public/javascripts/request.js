@@ -1,5 +1,6 @@
 var url = 'http://192.168.43.6:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_CMD/';
 var urls = 'http://192.168.43.6:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_SENSORS/';
+var url2 = 'http://192.168.43.6:8080/~/in-cse/in-name/MOBILITY_LAB/'
 var cin = 'la';
 /* Rq :
      XMLHttpRequest is a built-in object in web browsers.
@@ -44,7 +45,7 @@ module.exports = {
             tableau += "<tr><td>" + cntListe[i] + "</td>";
             var xhr = new XMLHttpRequest();
             //envoyer des requetes de façon synchrone si false asynchrone autrement (best)
-            xhr.open('GET', 'http://192.168.43.6:8080/~/in-cse/in-name/MOBILITY_LAB/' + cntListe[i] + '/la/', true);
+            xhr.open('GET', url2 + cntListe[i] + '/la/', true);
             xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
             xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
             xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');

@@ -9,7 +9,7 @@ app.use(express.static('public'));*/
 //https://html-to-pug.com/
 router.get('/', function (req, res, next) {
     res.render('parcours', {
-        title: "Voiture autonomme de l&apos;INSA Toulouse"
+        title: "Voiture autonomme de l'INSA Toulouse"
     });
     //om2m.generate_table();
 });
