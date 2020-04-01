@@ -11,8 +11,11 @@ express
 puis express --view=pug myapp
 */
 //https://html-to-pug.com/
+//depuis myapp et nodejs prompt 
 //launch debug : set DEBUG=myapp:* & npm start
 //default start :node ./bin/www
+//http://localhost:8080/
+//ou http://localhost:8080/PIR_website
 var indexRouter = require('./routes/index');
 //var usersRouter = require('./routes/users');
 

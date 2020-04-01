@@ -1,10 +1,10 @@
-var url = 'http://192.168.43.6:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_CMD/';
-var urls = 'http://192.168.43.6:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_SENSORS/';
-var url2 = 'http://192.168.43.6:8080/~/in-cse/in-name/MOBILITY_LAB/'
+var url = 'http://192.168.43.195:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_CMD/';
+var urls = 'http://192.168.43.195:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_SENSORS/';
+var url2 = 'http://192.168.43.195:8080/~/in-cse/in-name/MOBILITY_LAB/'
 var cin = 'la';
 /* Rq :
      XMLHttpRequest is a built-in object in web browsers.
-It is not distributed with Node; you have to install it separately,
+It is not distributed with Node; you have to install it separately, 
     Install it with npm,
     npm install xmlhttprequest
     Now you can require it in your code.
