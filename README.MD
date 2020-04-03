@@ -1,5 +1,6 @@
 # Config :
-> cd nodejs\myapp  
+> cd nodejs\myapp
+
 Editer le fichier config.js avec les IP/URL(celles accessibles, locales ou distantes) des:
 * serveur node js
 * serveur IN-CSE (om2m)  
@@ -12,7 +13,7 @@ Depuis nodejs prompt ou un invite de commande avc les paths de node :
 ## Lancer en normal:  
 > node ./bin/www  
 ## Ouvrir avec le naviagteur:  
-** utiliser l'IP/URL du serveur node js renseignée dans config.js **  
+**Utilisez l'IP/URL du serveur node js renseignée dans config.js**  
 Si vous ne savez pas quoi mettre, et voulez un indice :  
 > http://localhost:8080/  
 ou > votreIP:8080  
