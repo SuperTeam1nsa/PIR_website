@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var om2m = require('../public/javascripts/request');
+var om2m = require('../om2m/request');
+var conf = require('../config');
 //cf app.js
 /*var app = express();
 app.use(express.static('public'));*/
@@ -8,8 +9,10 @@ app.use(express.static('public'));*/
 /* GET home page. */
 //https://html-to-pug.com/
 router.get('/', function (req, res, next) {
+
     res.render('parcours', {
-        title: "Voiture autonomme de l'INSA Toulouse"
+        title: "Voiture autonomme de l'INSA Toulouse",
+        URL: conf.ctes.IP_SERVEUR
     });
     //om2m.generate_table();
 });
@@ -24,15 +27,16 @@ var page = url.parse(req.url).pathname;
         */
 router.get('/getGPS', function (req, res, next) {
     res.writeHead(200, {
-        "Content-Type": "json"
+        "Content-Type": "application/json"
     });
+
     //call request.js good function
     om2m.getGPS(res);
 });
 
 router.get('/ctes', function (req, res, next) {
     res.writeHead(200, {
-        "Content-Type": "HTML"
+        "Content-Type": "text/html"
     });
     //call request.js good function
     om2m.generate_table(res)
@@ -45,7 +49,7 @@ router.get('/command/:cnf/:content/:secret', function (req, res) {
     if (req.params.secret == 42) {
         //reçu
         res.writeHead(200, {
-            "Content-Type": "json"
+            "Content-Type": "application/json"
         });
         //on enverra le corps de la requête à la voiture +false/true back plus tard
         //asynchronous way

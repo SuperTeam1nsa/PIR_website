@@ -4,7 +4,10 @@ head
   meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
   meta(name='description' content='')
   meta(name='author' content='')
-  link(rel='icon' href='http://localhost:8080/images/bus.png')
+  //Pug gère :img(src=`/images/${sensor}.png`, style="width:20%")
+  //<div id=#{sensor} style="width:90%;height:250px;">
+  //body(onload="initTemp('"+ sensor +"')")
+  link(rel='icon' href=URL+'images/bus.png')
   title #{title}
   link(href='https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cerulean/bootstrap.min.css' rel='stylesheet' integrity='sha384-C++cugH8+Uf86JbNOnQoBweHHAe/wVKN/mb0lTybu/NZ9sEYbd+BbbYtNpWYAsNP' crossorigin='anonymous')
   // Bootstrap core CSS
@@ -31,8 +34,8 @@ header
     .row
       .col-lg-6.col-md-6.col-sm-12.col-xs-12.mb-3
         div
-          img.img-fluid(style='z-index: 1; ' src='http://localhost:8080/images/plan_campus_insa.png' aria-label='' title="Plan de l'INSA Toulouse!")
-          img#position_car.img-fluid(style='z-index: 2; position:absolute; top:0px; left:0;' src='http://localhost:8080/images/bus.png' aria-label='' title="Plan de l'INSA Toulouse!")
+          img.img-fluid(style='z-index: 1; ' src=URL+'images/plan_campus_insa.png' aria-label='' title="Plan de l'INSA Toulouse!")
+          img#position_car.img-fluid(style='z-index: 2; position:absolute; top:0px; left:0;' src=URL+'images/bus.png' aria-label='' title="Plan de l'INSA Toulouse!")
       .col-lg-6.col-md-6.col-sm-12.col-xs-12.mb-3
         section
           h1  Commande de la navette 
@@ -119,7 +122,7 @@ footer.container
   p &copy; 2020 PIR team 
   // &middot;
 script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous')
-script(src='http://localhost:8080/javascripts/main.js')
-script(src='http://localhost:8080/javascripts/station.js')
+script(src=URL+'javascripts/main.js')
+script(src=URL+'javascripts/station.js')
 script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous')
 script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous')

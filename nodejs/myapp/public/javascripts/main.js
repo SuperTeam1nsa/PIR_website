@@ -13,10 +13,10 @@ function main() {
     get_gps();
     maj_posi(px, py);
 }
-
+//relative to our web site domaine (#not begin with /) http://localhost:8080/
 function send_req(cnf, content) {
     $.ajax({
-        url: 'http://localhost:8080/command/' + cnf + '/' + content + '/42',
+        url: 'command/' + cnf + '/' + content + '/42',
         dataType: "json",
         success: function (response) {
             $('#RESULT_POST').html("Command result: " + response.data);
@@ -30,7 +30,7 @@ function send_req(cnf, content) {
 
 function getCtes() {
     $.ajax({
-        url: 'http://localhost:8080/ctes/',
+        url: 'ctes/',
         dataType: "HTML",
         success: function (response) {
             $('#CTES').html(response);
@@ -44,7 +44,7 @@ function getCtes() {
 function get_gps() {
     //call car via http request
     $.ajax({
-        url: 'http://localhost:8080/getGPS',
+        url: 'getGPS',
         dataType: "json",
         success: function (response) {
             var x = response.x;

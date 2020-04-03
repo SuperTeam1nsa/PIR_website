@@ -1,6 +1,14 @@
-var url = 'http://192.168.43.195:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_CMD/';
-var urls = 'http://192.168.43.195:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_SENSORS/';
-var url2 = 'http://192.168.43.195:8080/~/in-cse/in-name/MOBILITY_LAB/'
+var conf = require("../config")
+//URL du in-cse
+var base = conf.ctes.IP_INCSE + '~/in-cse/in-name/MOBILITY_LAB/';
+var url_cmd = base + 'NAV_CMD/';
+var url_sensors = base + 'NAV_SENSORS/'; // not use currently #node om2m à créer
+console.log(" base: " + base + "\n url_cmd: " + url_cmd + "\n url_sensors: " + url_sensors);
+/*var url_cmd = 'http://192.168.43.195:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_CMD/';
+var url_sensors = 'http://192.168.43.195:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_SENSORS/';
+var base = 'http://192.168.43.195:8080/~/in-cse/in-name/MOBILITY_LAB/'
+*/
+
 var cin = 'la';
 /* Rq :
      XMLHttpRequest is a built-in object in web browsers.
@@ -45,7 +53,7 @@ module.exports = {
             tableau += "<tr><td>" + cntListe[i] + "</td>";
             var xhr = new XMLHttpRequest();
             //envoyer des requetes de façon synchrone si false asynchrone autrement (best)
-            xhr.open('GET', url2 + cntListe[i] + '/la/', true);
+            xhr.open('GET', base + cntListe[i] + '/la/', true);
             xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
             xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
             xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');
@@ -150,7 +158,7 @@ module.exports = {
             res.write('{"data":"false"}');
             res.end();
         };
-        xhr.open('POST', url, true);
+        xhr.open('POST', url_cmd, true);
 
         //xhr.timeout = 500; //fail
         //timeout au bout de 2s
@@ -177,7 +185,7 @@ function del() { //alert("I'm in");
     let xhr = new XMLHttpRequest();
     //var body = "<m2m:cin xmlns:m2m='http://www.onem2m.org/xml/protocols' rn='cin_nav'><cnf>FORWARD</cnf><con>i</con></m2m:cin>";
     // 2. Configure it: GET-request for the URL /article/.../load
-    xhr.open('DELETE', url + cin);
+    xhr.open('DELETE', url_cmd + cin);
     xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
     xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
     xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');
@@ -246,7 +254,7 @@ function synchronize() {
     let xhr = new XMLHttpRequest();
     var body = "<m2m:cin xmlns:m2m='http://www.onem2m.org/xml/protocols'><cnf>synchronization</cnf><con>ok</con></m2m:cin>";
 
-    xhr.open('POST', urls);
+    xhr.open('POST', url_sensors);
     xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
     xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
     xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');
