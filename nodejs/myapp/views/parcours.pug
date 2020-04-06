@@ -15,20 +15,6 @@ head
   // Place your stylesheet here
   //link(href='/css/stylesheet.css' rel='stylesheet' type='text/css')
   body(onkeydown="keyCode(event)")
-header
-  nav
-    p
-      | D&eacute;part : 
-      span  
-    p
-      | Nombre de passagers : 
-      span  
-    p
-#myProgress
-  #myBar
-    p
-      a Synchronisation...
-    p
 #main.jumbotron.container-fluid
   .container
     .row
@@ -39,90 +25,89 @@ header
       .col-lg-6.col-md-6.col-sm-12.col-xs-12.mb-3
         section
           h1  Commande de la navette 
-          form(method='post')
-            label(for='number_passengers')  Nombre de passagers :
-            input#number_passengers(type='number' min='1' max='5' name='number_passengers' size='1')
+          form#mySuperForm(method='post' action="reservation/42" )
+            label(for='seats')  Nombre de passagers :
+            input#number_passengers(type='number' min='1' max='5' value='1' name='seats' size='1')
             br
-            label(for='departure')  D&eacute;part :
-            select#departure
-              option(value='fourier')  1-&gt; Amphith&eacute;atre Fourier 
-              option(value='stpi')  2-&gt; STPI 
-              option(value='riquet')  3-&gt; Amphith&eacute;atre Riquet 
-              option(value='exam')  4-&gt; Salle d&apos;examen 
+            label(for='in')  D&eacute;part :
+            select#departure(name="selecterIN")
+              option(value='1' )  1: Amphith&eacute;atre Fourier 
+              option(value='2' )  2: STPI 
+              option(value='3' )  3: Amphith&eacute;atre Riquet 
+              option(value='4' )  4: Salle d&apos;examen 
             br
-            label(for='destination')  Arriv&eacute;e :
-            select#destination
-              option(value='fourier')  1-&gt; Amphith&eacute;atre Fourier 
-              option(value='stpi')  2-&gt; STPI 
-              option(value='riquet')  3-&gt; Amphith&eacute;atre Riquet 
-              option(value='exam')  4-&gt; Salle d&apos;examen 
+            label(for='out')  Arriv&eacute;e :
+            select#destination(name="selecterOUT")
+              option(value='1')  1: Amphith&eacute;atre Fourier 
+              option(value='2', selected="selected" )  2: STPI 
+              option(value='3' )  3: Amphith&eacute;atre Riquet 
+              option(value='4' )  4: Salle d&apos;examen 
+            br
+            input(type="submit" value="Commander")
+        #result_form_submit
         section
           h1  Informations : 
           p
-            | Temps estim&eacute; : 
-            span#estimated_time  
-          p
             | Nombre de places disponibles : 
-            span#available_seats  
+            span#available_seats 
+          p
+            | Temps de trajet estim&eacute; : 
+            span#estimated_time   
           p
             | Attente estim&eacute;e : 
             span#estimated_waiting_time  
-          p
-            | Prochaine station : 
-            span#next_station  
-          button  Commander 
     #GPS
     #RESULT_POST
     #boutons  
-  .haut(onclick="send_req('FORWARD','i')")
-    p
-      a(href='#') FORWARD
-  .gauche(onclick="send_req('LEFT','u')")
-    p
-      a(href='#') LEFT
-  .droite(onclick="send_req('RIGHT','o')")
-    p
-      a(href='#') RIGHT
-  .bas(onclick="send_req('BACKWARD','k')")
-    p
-      a(href='#') BACKWARD
-  .A(onclick="send_req('SPEED+','a')" style='max-width: 12%;')
-    p
-      a(href='#') SPEED+
-  .Z(onclick="send_req('SPEED-','z')" style='max-width: 12%;')
-    p
-      a(href='#') SPEED-
-  .Q(onclick="send_req('ANGULAR+','q')" style='max-width: 12%;')
-    p
-      a(href='#') ANGULAR+
-  .S(onclick="send_req('ANGULAR-','s')" style='max-width: 12%;')
-    p
-      a(href='#') ANGULAR-
-  .W(onclick="send_req('LINEAR+','w')" style='max-width: 12%;')
-    p
-      a(href='#') LINEAR+
-  .X(onclick="send_req('LINEAR-','x')" style='max-width: 12%;')
-    p
-      a(href='#') LINEAR-
-  .Delete(onclick="send_req('STOP',' ')")
-    p
-      a(href='#') STOP
-      
-#CTES
-#INFO
-  .X(onclick="getCtes()")
-    p 
-      a(href='#') INFO : Consultation des capteurs Mobility_Lab 
-      //p!= INFO
-      
+    table(style='width:100%', border='1')
+      tr
+        th Direction
+        th Speed
+        th Angle
+      tr
+       td(onclick="send_req('FORWARD','i')")
+          a(href='#RESULT_POST') FORWARD
+       td(onclick="send_req('SPEED+','a')")
+          a(href='#RESULT_POST') SPEED+
+       td(onclick="send_req('ANGULAR+','q')")
+          a(href='#RESULT_POST') ANGULAR+
+      tr
+       td(onclick="send_req('LEFT','u')")
+          a(href='#RESULT_POST') LEFT
+       td(onclick="send_req('SPEED-','z')")
+          a(href='#RESULT_POST') SPEED-
+       td(onclick="send_req('ANGULAR-','s')")
+          a(href='#RESULT_POST') ANGULAR-
+      tr
+       td(onclick="send_req('RIGHT','o')")
+          a(href='#RESULT_POST') RIGHT
+       td
+       td(onclick="send_req('LINEAR+','w')")
+        a(href='#RESULT_POST') LINEAR+
+      tr
+       td(onclick="send_req('BACKWARD','k')")
+          a(href='#RESULT_POST') BACKWARD
+       td
+       td(onclick="send_req('LINEAR-','x')")
+        a(href='#RESULT_POST') LINEAR-
+      tr
+       td(onclick="send_req('STOP',' ')")
+          a(href='#RESULT_POST') STOP
 
+    #INFO
+            p(onclick="getCtes()")
+              a(href='#CTES') UPDATE INFO : Consultation des capteurs Mobility_Lab 
+              //p!= INFO
+    #CTES
+      
 footer.container
-  p.float-right
-    a(href='#') Top 
-  p &copy; 2020 PIR team 
-  // &middot;
-script(src='https://code.jquery.com/jquery-3.3.1.slim.min.js' integrity='sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo' crossorigin='anonymous')
+    p.float-right
+        a(href='#') Top 
+    p &copy; 2020 PIR team 
+// &middot;
+script(src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous")
 script(src=URL+'javascripts/main.js')
 script(src=URL+'javascripts/station.js')
+!=SCRIPT
 script(src='https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js' integrity='sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1' crossorigin='anonymous')
 script(src='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js' integrity='sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM' crossorigin='anonymous')

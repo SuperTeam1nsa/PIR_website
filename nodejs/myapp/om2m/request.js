@@ -25,14 +25,25 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 module.exports = {
     getGPS: function (res) {
         //TODO
-        res.write('{"x":"' + 42 + '", "y":"' + 21 + '"}');
-        res.end();
+        var coord = {
+            x: 42,
+            y: 21
+        };
+        if (typeof res !== 'undefined') {
+            res.write(JSON.stringify(coord));
+            res.end();
+        }
+
+        return coord;
+    },
+    stop_get_in_out: function () {
+        console.log("\n OK I need to take someone ! Othewise you didn't tell me how ! Oh how awful you are ! ");
     },
     generate_table: function (res) {
 
         var cntListe = ['localization_time', 'localization_valid', 'localization_accurate', 'path_time', 'path_lateral_error', 'path_orientation_error', 'remote_start', 'remote_manual', 'remote_buzzer', 'remote_door', 'supervisor_enabled', 'supervisor_run', 'supervisor_resume', 'carselector_auto', 'anticollision_stop', 'anticollision_warning', 'door_opened', 'door_error', 'safetyok', 'supervisor_emergency_io_steer_drive_aok', 'supervisor_emergency_car_time', 'supervisor_emergency_car_command', 'supervisor_emergency_car_speed', 'supervisor_emergency_car_steer', 'supervisor_emergency_steer_encoder_time', 'supervisor_emergency_left_encoder_time', 'supervisor_emergency_right_encoder_time', 'supervisor_pause_laser_time', 'supervisor_pause_door_closed', 'supervisor_enable_power', 'door_closed', 'pad_A', 'pad_B', 'parkingBrake_Released', 'remote_estop'];
         cntListe = cntListe.sort();
-        cntListe.unshift('***');
+        cntListe.unshift('***'); // addd *** en tant que capteur => ???? url d'inititalisation ??
         let rep = null;
         var regex = /<\//gi; //pour l'extraction du contenu
 
@@ -46,7 +57,7 @@ module.exports = {
         var tblBody = document.createElement("tbody");
         
         */
-        var tableau = "<table><tbody>";
+        var tableau = "<table style='width:100%', border='1'><tr><th>Sensors</th><th>Data</th></tr><tbody>";
 
         for (var i = 0; i < cntListe.length; i++) {
 
@@ -62,7 +73,7 @@ module.exports = {
 
             xhr.onerror = function () {
                 console.log("Ctes getting fail !");
-                tableau += "</th>";
+                tableau += "<td>unknow </td></tr>";
             };
             //xhr.timeout = 500; // time in milliseconds
             xhr.onload = function () {
@@ -85,7 +96,7 @@ module.exports = {
                     // the end of the table row
                     //  var cell = document.createElement("td");
                     //    var cellText = document.createTextNode(rep[1]);
-                    tableau += "<td>" + rep[1] + "</td></th>";
+                    tableau += "<td>" + rep[1] + "</td></tr>";
                     //cell.appendChild(cellText); // add the row to the end of the table body
                     //tblBody.appendChild(row);
                     //row.appendChild(cell);
@@ -110,7 +121,7 @@ module.exports = {
 
         } //for
         tableau += "</tbody></table>";
-        console.log("sending back data sensor !");
+        console.log("\n sending back data sensor !");
         res.write(tableau);
         res.end();
         // put the <tbody> in the <table>

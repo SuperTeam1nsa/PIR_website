@@ -5,6 +5,23 @@ script.src = 'http://code.jquery.com/jquery-1.11.0.min.js';
 script.type = 'text/javascript';
 document.getElementsByTagName('head')[0].appendChild(script);
 
+//rq: could check details before submitting, here all taff for server
+$('#mySuperForm').submit(function () { // catch the form's submit event
+    $.ajax({ // create an AJAX call...
+        data: $(this).serialize(), // get the form data
+        type: $(this).attr('method'), // GET or POST
+        url: $(this).attr('action'), // the file to call
+        success: function (response) { // on success..
+            $('#result_form_submit').html(response); // update the DIV
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            $('#result_form_submit').html(jqXHR.responseText); //jqXHR.status = code d'erreur
+        }
+    });
+    return false; // cancel original event to prevent form submitting
+});
+
+setTimeout(get_seats, 100);
 var myVar = setInterval(main, 2000);
 var px = 0;
 var py = 0;
@@ -12,9 +29,12 @@ var py = 0;
 function main() {
     get_gps();
     maj_posi(px, py);
+    get_seats();
 }
+
 //relative to our web site domaine (#not begin with /) http://localhost:8080/
 function send_req(cnf, content) {
+    $('#RESULT_POST').html("Waiting for Command result...");
     $.ajax({
         url: 'command/' + cnf + '/' + content + '/42',
         dataType: "json",
@@ -29,6 +49,7 @@ function send_req(cnf, content) {
 }
 
 function getCtes() {
+    $('#CTES').html("Waiting for shuttle to get sensors info...");
     $.ajax({
         url: 'ctes/',
         dataType: "HTML",
@@ -57,9 +78,25 @@ function get_gps() {
             $('#GPS').html(errorThrown);
         }
     });
-
+    //pour test en vrai mettre x et y got
     px += 10;
     py += 10;
+}
+
+function get_seats() {
+    //call car via http request
+    $.ajax({
+        url: 'get_seats',
+        dataType: "html",
+        success: function (response) {
+            //alert(" ok manger ");
+            $('#available_seats').html(response);
+        },
+        error: function (jqXHR, textStatus, errorThrown) {
+            //alert(" NOK ");
+            $('#available_seats').html(errorThrown);
+        }
+    });
 }
 
 function maj_posi(posix, posiy) {

@@ -35,8 +35,15 @@ app.use(express.urlencoded({
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+/*app.post('/reservation/:secret', function (request, response) {
+    console.log(" hum hum ..." + request.body.seats);
+    response.writeHead(200, {
+        "Content-Type": "text/html"
+    });
+    response.end();
+    //console.log(request.body.user.email);
+}); //app.use('/users', usersRouter);*/
 app.use('/', indexRouter);
-//app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
