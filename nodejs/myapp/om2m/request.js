@@ -21,14 +21,16 @@ It is not distributed with Node; you have to install it separately,
 That said, Node comes with the http module which is the normal tool for choice for making HTTP requests from Node. 
 */
 //rq: return always possible, but not good with asynchronous
+// simulation
+var tab_coord = conf.ctes.simulation_posi;
+var cpt = 0;
+
 var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 module.exports = {
     getGPS: function (res) {
         //TODO
-        var coord = {
-            x: 42,
-            y: 21
-        };
+        var coord = tab_coord[cpt];
+        cpt = (cpt + 1) % tab_coord.length;
         if (typeof res !== 'undefined') {
             res.write(JSON.stringify(coord));
             res.end();

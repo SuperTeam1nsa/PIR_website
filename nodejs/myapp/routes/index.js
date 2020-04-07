@@ -4,32 +4,79 @@ var om2m = require('../om2m/request');
 var conf = require('../config');
 var qs = require('querystring');
 var current_seat_taken = 0;
-var get_in_people = new Array(conf.ctes.STOP_POINTS.length).fill(0, 0, conf.ctes.STOP_POINTS.length);
-var get_out_people = new Array(conf.ctes.STOP_POINTS.length).fill(0, 0, conf.ctes.STOP_POINTS.length);
+var current_inside_nav = 0;
+var lastStation = 3;
+var txt = "Driving happily...";
+var coord = om2m.getGPS();
+var get_in_people = new Array(conf.ctes.STOP_POINTS.length + 1);
+var get_out_people = new Array(conf.ctes.STOP_POINTS.length + 1).fill(0, 0, conf.ctes.STOP_POINTS.length + 1);
+//struct: tab[stations_in][reservation n°]{nb, out} //cf reservation part
+for (let k = 0; k < get_in_people.length; k++) {
+    get_in_people[k] = new Array();
+}
+
 
 //get gps et est-ce qu'on doit s'arrêter pour get people ?
-
+//+defini à quel fréquence on obtient les infos gps
 var interval = setInterval(function () {
-    var coord = om2m.getGPS();
+    coord = om2m.getGPS();
     var cpt = 0;
-    console.log('[Check Station position vs :' + JSON.stringify(coord) + ']');
-    for (var i = conf.ctes.STOP_POINTS[cpt]; i < conf.ctes.STOP_POINTS.length; i = conf.ctes.STOP_POINTS[cpt]) {
+    var station = -1;
+    //console.log('[Check Station position vs :' + JSON.stringify(coord) + ']');
+    for (let i = conf.ctes.STOP_POINTS[cpt]; cpt < conf.ctes.STOP_POINTS.length; i = conf.ctes.STOP_POINTS[cpt]) {
+        //console.log("x <= " + ((1 + conf.ctes.TOL_X) * i.x) + " x >= " + ((1 - conf.ctes.TOL_X) * i.x) +
+        //    " y <= " + ((1 + conf.ctes.TOL_Y) * i.y) + " y>= " + ((1 - conf.ctes.TOL_Y) * i.y));
         //si on est à un stop point à TOL% près (à def dans config)
-        if (coord.x <= ((1 + conf.ctes.TOL_X) * i.x) && coord.x >= ((1 - conf.ctes.TOL_X) * i.x) &&
-            coord.y <= ((1 + conf.ctes.TOL_Y) * i.y) && coord.y >= ((1 - conf.ctes.TOL_Y) * i.y)) {
-            if (get_in_people[cpt] > 0) {
-                get_in_people[cpt] = 0;
+        //% injuste => offset / rayon better
+        var entier = parseInt(cpt + 1, 10);
+        if (coord.x <= (conf.ctes.TOL_X + i.x) && coord.x >= (i.x - conf.ctes.TOL_X) &&
+            coord.y <= (conf.ctes.TOL_Y + i.y) && coord.y >= (i.y - conf.ctes.TOL_Y)) {
+            console.log('\n\n\n [Arrive at Station :' + entier + " in/out: " + ((get_in_people[entier].length > 0) || (get_out_people[entier] > 0)) + ' ] \n\n\n');
+            //3 ifs la procedure in/out pouvant varier
+            if ((get_in_people[entier].length > 0) && (get_out_people[entier] > 0)) {
+                let nb_in = 0
+                for (let j = 0; j < get_in_people[entier].length; j++) {
+                    nb_in += get_in_people[entier][j].nb;
+                }
+                current_inside_nav = (current_inside_nav - get_out_people[entier]) + nb_in;
+                current_seat_taken -= get_out_people[entier];
+                txt = " We get in " + nb_in + " people get out " + get_out_people[entier] + "at last station! :D ";
                 //procédure de chargement/dechargement
                 om2m.stop_get_in_out();
-            } else if (get_out_people[cpt] > 0) {
-                get_out_people[cpt] = 0;
+                get_in_people[entier] = 0;
+                get_out_people[entier] = 0;
+            } else if (get_in_people[entier].length > 0) {
+                let nb_in = 0
+                //procédure de chargement/dechargement
                 om2m.stop_get_in_out();
+                for (let j = 0; j < get_in_people[entier].length; j++) {
+                    console.log(" get out station num" + get_in_people[entier][j].out + " 1st value: " +
+                        get_out_people[get_in_people[entier][j].out] + " add " +
+                        get_in_people[entier][j].nb);
+                    get_out_people[get_in_people[entier][j].out] += get_in_people[entier][j].nb;
+                    nb_in += get_in_people[entier][j].nb;
+                }
+
+                current_inside_nav += nb_in;
+                txt = " We get in " + nb_in + " people at last station!: D ";
+                get_in_people[entier] = new Array(0);
+            } else if (get_out_people[entier] > 0) {
+                om2m.stop_get_in_out();
+                txt = " We get out " + get_out_people[entier] + " people at last station! #Done ! ";
+                current_inside_nav -= get_out_people[entier];
+                current_seat_taken -= get_out_people[entier];
+                get_out_people[entier] = 0;
+            } else {
+                txt = " There was no one to have a ride with us at last station... :'( ";
             }
+            station = entier;
             //on est à un seul endroit à la fois
             break;
         }
         cpt++;
     }
+    if (station != -1)
+        lastStation = station;
 
 }, parseInt(conf.ctes.GPS_SYNCHRO_TIME, 10));
 
@@ -56,21 +103,11 @@ var page = url.parse(req.url).pathname;
             res.end();
         }
         */
-router.get('/get_seats', function (req, res) {
-    res.writeHead(200, {
-        "Content-Type": "text/html"
-    });
-    res.write("<strong>" + (parseInt(conf.ctes.SHUTTLE_SEAT, 10) - parseInt(current_seat_taken, 10)) + "</strong");
-    res.end();
-});
-
 //rq: pour un from plus complexe, il est préférable de action="check_form" et check_form() fait de l'ajax avec le 
 //serveur pour update la page en local
 router.post('/reservation/:secret', function (req, res) {
-    console.log("Reservation en cours ...");
+    console.log("Reservation en cours de la station " + req.body.selecterIN + " à la station " + req.body.selecterOUT);
     if (req.params.secret == 42) {
-        console.log("Post");
-        console.log("data");
         var body = req.body;
         // Too much POST data, kill the connection!
         // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
@@ -79,7 +116,7 @@ router.post('/reservation/:secret', function (req, res) {
             req.connection.destroy();
         }
         // use post['blah'], etc.
-        console.log("INSIDE ..." + req.body.selecterIN + " " + req.body.selecterOUT + " " + req.body.seats);
+        // console.log("INSIDE ..." + req.body.selecterIN + " " + req.body.selecterOUT + " " + req.body.seats);
         var asked = parseInt(req.body.seats, 10); //base 10
         if (asked <= 0) {
             res.writeHead(451);
@@ -90,11 +127,15 @@ router.post('/reservation/:secret', function (req, res) {
                 res.writeHead(200, {
                     "Content-Type": "text/html"
                 });
-                var inp = parseInt(req.body.selecterIN, 10);
-                var outp = parseInt(req.body.selecterOUT, 10);
+                var in_station = parseInt(req.body.selecterIN, 10);
+                var out_station = parseInt(req.body.selecterOUT, 10);
                 //on connait le nombre de personnes à récupérer et à déposer + le lieu(pour stats/opti trajet futurs)
-                get_in_people[inp] += asked;
-                get_out_people[outp] += asked;
+                //rq: check tha get in BEFORE get out
+                //struct: tab[stations_in][reservation n°]{nb, out}
+                get_in_people[in_station].push({
+                    nb: asked,
+                    out: out_station
+                });
                 res.write("<p>OK, reservation prise en compte de " + asked + " il y en avait : " + current_seat_taken +
                     " de deja pris et " + conf.ctes.SHUTTLE_SEAT + " en tout </p");
                 res.end();
@@ -110,11 +151,23 @@ router.post('/reservation/:secret', function (req, res) {
     }
 
 });
-router.get('/getGPS', function (req, res) {
+router.get('/getInfo', function (req, res) {
     res.writeHead(200, {
         "Content-Type": "application/json"
     });
-    om2m.getGPS(res);
+    var stats = "People inside :" + parseInt(current_inside_nav, 10) + " and " + parseInt(current_seat_taken - current_inside_nav, 10) + " bookings";
+    let seats = (parseInt(conf.ctes.SHUTTLE_SEAT, 10) - parseInt(current_seat_taken, 10));
+    //on add les infos aux coord obtenus via la syncho gps
+    let coordExtended = Object.assign({
+        lastStation: lastStation,
+        seats: seats,
+        details: txt,
+        stats: stats
+    }, coord);
+    res.write(JSON.stringify(coordExtended));
+    res.end();
+
+    //om2m.getGPS(res);
     //call request.js good function
     // res.write(); //JSON.stringify(
     // res.end(om2m.getGPS());

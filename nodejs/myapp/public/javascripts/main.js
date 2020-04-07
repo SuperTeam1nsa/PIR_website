@@ -1,9 +1,19 @@
 //to uncomment in prod 
 //synchronize();
-var script = document.createElement('script');
+/*var script = document.createElement('script');
 script.src = 'http://code.jquery.com/jquery-1.11.0.min.js';
 script.type = 'text/javascript';
-document.getElementsByTagName('head')[0].appendChild(script);
+document.getElementsByTagName('head')[0].appendChild(script);*/
+
+//Params
+var stations_dist = [125, 125, 110, 350];
+var vitesse = 75;
+var lastStation = 3;
+var waiting = 0;
+var px = 0;
+var py = 0;
+
+setInterval(get_info, 1000);
 
 //rq: could check details before submitting, here all taff for server
 $('#mySuperForm').submit(function () { // catch the form's submit event
@@ -13,6 +23,23 @@ $('#mySuperForm').submit(function () { // catch the form's submit event
         url: $(this).attr('action'), // the file to call
         success: function (response) { // on success..
             $('#result_form_submit').html(response); // update the DIV
+            /* var cd5 = new Countdown({
+                 cont: document.getElementById("countdown"),
+                 date: Date.now() + waiting * 1000,
+                 outputTranslation: {
+                     minute: 'Minutes',
+                     second: 'Seconds',
+                 },
+                 endCallback: function () {
+                     document.getElementById("countdown").insertAdjacentHTML(
+                         'beforeend',
+                         '<div style="display: flex;height: 50px;align-items: center;justify-content: center;background: red;font-weight: bold;">Countdown ended. The shuttle should be here :D </div>')
+                 },
+                 outputFormat: 'minute|second',
+             });
+             cd5.start();*/
+            //too much !
+            //launch calc & notifs android
         },
         error: function (jqXHR, textStatus, errorThrown) {
             $('#result_form_submit').html(jqXHR.responseText); //jqXHR.status = code d'erreur
@@ -20,17 +47,6 @@ $('#mySuperForm').submit(function () { // catch the form's submit event
     });
     return false; // cancel original event to prevent form submitting
 });
-
-setTimeout(get_seats, 100);
-var myVar = setInterval(main, 2000);
-var px = 0;
-var py = 0;
-
-function main() {
-    get_gps();
-    maj_posi(px, py);
-    get_seats();
-}
 
 //relative to our web site domaine (#not begin with /) http://localhost:8080/
 function send_req(cnf, content) {
@@ -62,47 +78,30 @@ function getCtes() {
     });
 }
 
-function get_gps() {
+function get_info() {
     //call car via http request
     $.ajax({
-        url: 'getGPS',
+        url: 'getInfo',
         dataType: "json",
         success: function (response) {
-            var x = response.x;
-            var y = response.y;
+            px = response.x;
+            py = response.y;
+            //mise à l'échelle selon l'écran
+            var ratio = document.getElementById("planINSA").clientWidth * 10 / 404; //404 =ini
+            px = px * ratio / 10;
+            py = py * ratio / 10;
+            lastStation = response.lastStation;
             //alert(" ok manger ");
-            $('#GPS').html("GPS: x : " + x + " y: " + y);
+            $('#GPS').html("<hr>GPS: x : " + Math.floor(px) + " y: " + Math.floor(py) + "<br>Last station visited :" + response.lastStation + " <br>" + response.details + "<br>" + response.stats + "<hr>");
+            document.getElementById("position_car").style = "z-index: 2; position:absolute;visibility: visible; top:" + py + "px; left:" + px + "px;";
+            $('#available_seats').html("<strong>" + response.seats + "</strong>");
+            trajetTime();
         },
         error: function (jqXHR, textStatus, errorThrown) {
             //alert(" NOK ");
             $('#GPS').html(errorThrown);
         }
     });
-    //pour test en vrai mettre x et y got
-    px += 10;
-    py += 10;
-}
-
-function get_seats() {
-    //call car via http request
-    $.ajax({
-        url: 'get_seats',
-        dataType: "html",
-        success: function (response) {
-            //alert(" ok manger ");
-            $('#available_seats').html(response);
-        },
-        error: function (jqXHR, textStatus, errorThrown) {
-            //alert(" NOK ");
-            $('#available_seats').html(errorThrown);
-        }
-    });
-}
-
-function maj_posi(posix, posiy) {
-    document.getElementById("position_car").style = "z-index: 2; position:absolute; top:" + posiy +
-        "px; left:" + posix +
-        "px;";
 }
 
 function keyCode(event) {
@@ -131,3 +130,64 @@ function keyCode(event) {
         send_req('LINEAR-', 'x');
     }
 }
+
+function heuristique_time(n_dep, n_dest, station_bonus) {
+    if (n_dep != n_dest) {
+        var dst = 0;
+        while (n_dep != n_dest) {
+            dst += stations_dist[n_dep];
+            n_dep = (n_dep + 1) % stations_dist.length;
+        }
+
+        if (typeof station_bonus !== 'undefined')
+            dst += stations_dist[station_bonus];
+        var x = dst / (vitesse / 3.6);
+        var min = Math.floor(x / 60);
+        //arrondi les sec à la dizaine sup
+        //var sec = Math.round((x % 60) / 10) * 10;
+        var sec = Math.round(x % 60);
+        if (sec >= 60) {
+            min++;
+            sec = 0;
+        }
+        return {
+            min: min,
+            s: sec
+        };
+    } else
+        return {
+            min: 0,
+            s: 0
+        };
+}
+
+function trajetTime() {
+
+    var n_dep = document.getElementById("departure").value - 1;
+    var n_dest = document.getElementById("destination").value - 1;
+    var time = heuristique_time(n_dep, n_dest);
+    if (time.min + time.s > 0) {
+        document.getElementById("estimated_time").textContent = time.min + "min " + time.s + "s";
+        //si la dernière station passée est la notre, il faudra faire un tour entier
+        var wait = 0;
+        if ((lastStation - 1) != n_dep)
+            wait = heuristique_time(lastStation - 1, n_dep)
+        else {
+            wait = (heuristique_time(lastStation % stations_dist.length, n_dep, lastStation - 1));
+        }
+        waiting = parseInt(wait.min * 60 + wait.s, 10);
+        document.getElementById("estimated_waiting_time").textContent = wait.min + "min " + wait.s + "s";
+    } else {
+        document.getElementById("estimated_time").textContent = " Vous êtes déjà arrivés :p ";
+        document.getElementById("estimated_waiting_time").textContent = " Vous êtes déjà arrivés :p ";
+    }
+
+}
+
+window.onload = function () {
+    get_info();
+    trajetTime();
+};
+
+document.getElementById("departure").addEventListener("change", trajetTime);
+document.getElementById("destination").addEventListener("change", trajetTime);
