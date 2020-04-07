@@ -137,7 +137,7 @@ router.post('/reservation/:secret', function (req, res) {
                     out: out_station
                 });
                 res.write("<p>OK, reservation prise en compte de " + asked + " il y en avait : " + current_seat_taken +
-                    " de deja pris et " + conf.ctes.SHUTTLE_SEAT + " en tout </p");
+                    " de deja pris et " + conf.ctes.SHUTTLE_SEAT + " en tout </p>");
                 res.end();
                 current_seat_taken += asked;
             } else {

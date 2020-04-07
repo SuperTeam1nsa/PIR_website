@@ -1,7 +1,7 @@
 "use strict";
 //192.168.43.193
 var ctes = {
-    IP_SERVEUR: "http://localhost:8080/",
+    IP_SERVEUR: "http://192.168.43.193:8080/",
     IP_INCSE: "http://192.168.43.195:8080/",
     SHUTTLE_SEAT: 5,
     STOP_POINTS: new Array(4),

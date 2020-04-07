@@ -23,6 +23,8 @@ $('#mySuperForm').submit(function () { // catch the form's submit event
         url: $(this).attr('action'), // the file to call
         success: function (response) { // on success..
             $('#result_form_submit').html(response); // update the DIV
+            //android toast
+            Android.showToast(response);
             /* var cd5 = new Countdown({
                  cont: document.getElementById("countdown"),
                  date: Date.now() + waiting * 1000,
