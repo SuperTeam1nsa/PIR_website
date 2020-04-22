@@ -1,19 +1,19 @@
-# Config :
-> cd nodejs\myapp
+# Configuration :
 
-Editer le fichier config.js avec les IP/URL(celles accessibles, locales ou distantes) des:
-* serveur node js
-* serveur IN-CSE (om2m)  
+Edit the file `nodejs\myapp\config.js` with IP/URL of:
+* server node js (your IP or localhost if you want to test on your PC and not on an online server) 
+* server IN-CSE (om2m)  
 
-# Lancement :
-Depuis nodejs prompt ou un invite de commande avc les paths de node :  
-> cd nodejs\myapp  
-## Lancer en debug:  
-> set DEBUG=myapp:* & npm start  
-## Lancer en normal:  
-> node ./bin/www  
-## Ouvrir avec le naviagteur:  
-**Utilisez l'IP/URL du serveur node js renseignée dans config.js**  
-Si vous ne savez pas quoi mettre, et voulez un indice :  
-> http://localhost:8080/  
-ou > votreIP:8080  
+## Running :
+From nodejs prompt or a command prompt with node paths configured :  
+` cd nodejs\myapp`
+  1. Start in debug mode
+    ` set DEBUG=myapp:* & npm start  `
+  2. Start in normal mode:
+    `node ./bin/www  `
+## Open your browser on IP/URL of server node js (the one configured in config.js)
+By default : 
+``` 
+http://localhost:8080/  
+yourIP:8080  
+ ```
