@@ -3,12 +3,20 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+//Next time use a better generator :https://github.com/cdimascio/generator-express-no-stress
+//all express +
+//#Babel (auto js new gen retrocompatibility), ESLint true js debug, piano #good log
+//dot env =config.js mais en .env #good practice
+//swagger auto doc api
 /* config :
 npx express-generator
 ou :
 npm install -g express-generator
-express
+//express -h pour vérifier que ça a marché
 puis express --view=pug myapp
+Navigate into the app directory and use NPM to install dependencies
+cd myapp
+npm install
 */
 //https://html-to-pug.com/
 //depuis myapp et nodejs prompt 

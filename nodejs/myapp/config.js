@@ -1,13 +1,15 @@
 "use strict";
 //192.168.43.193
 var ctes = {
-    IP_SERVEUR: "http://192.168.43.193:8080/",
-    IP_INCSE: "http://192.168.43.195:8080/",
+    IP_SERVEUR: "http://localhost:8080/", //"http://192.168.43.193:8080/",
+    IP_INCSE: "http://localhost:8080/", //"http://192.168.43.193:8080/",
     SHUTTLE_SEAT: 5,
     STOP_POINTS: new Array(4),
     GPS_SYNCHRO_TIME: 1000,
     TOL_X: 10,
     TOL_Y: 4,
+    isSimu: 1, //set simu if 1 (put 0 otherwise) (name of om2m node different in om2m)
+    delayArret: 1000,
     simulation_posi: new Array(50)
 };
 //coordonnées GPS des stations
@@ -42,7 +44,7 @@ for (let i = 0; i <= step_x; i++) {
         y: y_ini
     };
 }
-//de haut à droite à en bas à droite 
+//de haut à droite à en bas à droite
 for (let i = 0; i <= step_y; i++) {
     ctes.simulation_posi[step_x + i] = {
         x: x_max + x_ini,
