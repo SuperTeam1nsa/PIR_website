@@ -8,7 +8,7 @@ var ctes = {
     GPS_SYNCHRO_TIME: 1000,
     TOL_X: 10,
     TOL_Y: 4,
-    isSimu: 1, //set simu if 1 (put 0 otherwise) (name of om2m node different in om2m)
+    isSimu: 2, //set simu if 1 (put 0 otherwise, 2 to script) (name of om2m node different in om2m)
     delayArret: 1000,
     simulation_posi: new Array(50)
 };

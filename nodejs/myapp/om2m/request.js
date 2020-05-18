@@ -41,53 +41,56 @@ var XMLHttpRequest = require("xmlhttprequest").XMLHttpRequest;
 module.exports = {
     getGPS: function (res) {
         ////TODO:CHECK_DENIS # 
-        var xhr = new XMLHttpRequest();
-        //envoyer des requetes de façon synchrone si false asynchrone autrement (best)
-        xhr.open('GET', url_sensors, true);
-        xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
-        xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
-        xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');
-        xhr.setRequestHeader('X-M2M-Origin', 'admin:admin');
-        xhr.setRequestHeader('Accept', 'application/xml');
+        if (!(conf.ctes.isSimu == 2)) {
+            var xhr = new XMLHttpRequest();
+            //envoyer des requetes de façon synchrone si false asynchrone autrement (best)
+            xhr.open('GET', url_sensors, true);
+            xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
+            xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
+            xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');
+            xhr.setRequestHeader('X-M2M-Origin', 'admin:admin');
+            xhr.setRequestHeader('Accept', 'application/xml');
 
-        xhr.onerror = function () {
-            console.log("Ctes getting fail !");
-        };
-        //xhr.timeout = 500; // time in milliseconds
-        xhr.onload = function () {
-            if (xhr.status != 200) { // analyze HTTP status of the response
-                console.log(`Error $ {
+            xhr.onerror = function () {
+                console.log("Ctes getting fail !");
+            };
+            //xhr.timeout = 500; // time in milliseconds
+            xhr.onload = function () {
+                if (xhr.status != 200) { // analyze HTTP status of the response
+                    console.log(`Error $ {
                               xhr.status
                           }
                           : + $ {
                               xhr.statusText
                           }`); //  e.g. 404: Not Found
-            } else {
-                rep = xhr.response;
-                //alert(rep);
-                rep = rep.replace(regex, '<');
-                rep = rep.split('<con>');
-                console.log(rep[1]);
-                var dataShuttle = JSON.parse(rep[1]);
-                coord = {
-                    x: dataShuttle.x,
-                    y: dataShuttle.y
+                } else {
+                    rep = xhr.response;
+                    //alert(rep);
+                    rep = rep.replace(regex, '<');
+                    rep = rep.split('<con>');
+                    console.log(rep[1]);
+                    var dataShuttle = JSON.parse(rep[1]);
+                    coord = {
+                        x: dataShuttle.x,
+                        y: dataShuttle.y
+                    };
                 };
             };
-        };
 
-        setTimeout(function () {
-            /* vs. a.timeout */
-            if (xhr.readyState < 4) {
-                xhr.params = "has timeout :p";
-                xhr.abort();
-            }
-        }, 5000); //PROD : timeout: 1000 et pas 5
-        xhr.send();
+            setTimeout(function () {
+                // vs. a.timeout 
+                if (xhr.readyState < 4) {
+                    xhr.params = "has timeout :p";
+                    xhr.abort();
+                }
+            }, 5000); //PROD : timeout: 1000 et pas 5
+            xhr.send();
 
-        /* fais le tour tout seul
-        coord = tab_coord[cpt];
-        cpt = (cpt + 1) % tab_coord.length;*/
+            //fais le tour tout seul
+        } else {
+            coord = tab_coord[cpt];
+            cpt = (cpt + 1) % tab_coord.length;
+        }
         if (typeof res !== 'undefined') {
             res.write(JSON.stringify(coord));
             res.end();

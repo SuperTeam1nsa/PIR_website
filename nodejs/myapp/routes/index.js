@@ -42,13 +42,18 @@ var interval = setInterval(function () {
                 current_seat_taken -= get_out_people[entier];
                 txt = " We get in " + nb_in + " people get out " + get_out_people[entier] + "at last station! :D ";
                 //procédure de chargement/dechargement
-                om2m.stop_get_in_out();
-                get_in_people[entier] = 0;
+                om2m.stop_get_in_out(false); //on s'arrête
+                setTimeout(om2m.stop_get_in_out.bind(null, true), conf.ctes.delayArret); //repart dans conf.ctes.delayArret
                 get_out_people[entier] = 0;
+                for (let j = 0; j < get_in_people[entier].length; j++) {
+                    get_out_people[get_in_people[entier][j].out] += get_in_people[entier][j].nb;
+                }
+                get_in_people[entier] = 0;
             } else if (get_in_people[entier].length > 0) {
                 let nb_in = 0
                 //procédure de chargement/dechargement
-                om2m.stop_get_in_out();
+                om2m.stop_get_in_out(false); //on s'arrête
+                setTimeout(om2m.stop_get_in_out.bind(null, true), conf.ctes.delayArret); //repart dans conf.ctes.delayArret
                 for (let j = 0; j < get_in_people[entier].length; j++) {
                     console.log(" get out station num" + get_in_people[entier][j].out + " 1st value: " +
                         get_out_people[get_in_people[entier][j].out] + " add " +
@@ -61,7 +66,8 @@ var interval = setInterval(function () {
                 txt = " We get in " + nb_in + " people at last station!: D ";
                 get_in_people[entier] = new Array(0);
             } else if (get_out_people[entier] > 0) {
-                om2m.stop_get_in_out();
+                om2m.stop_get_in_out(false); //on s'arrête
+                setTimeout(om2m.stop_get_in_out.bind(null, true), conf.ctes.delayArret); //repart dans conf.ctes.delayArret
                 txt = " We get out " + get_out_people[entier] + " people at last station! #Done ! ";
                 current_inside_nav -= get_out_people[entier];
                 current_seat_taken -= get_out_people[entier];
