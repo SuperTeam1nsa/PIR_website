@@ -11,9 +11,10 @@ if (!conf.ctes.isSimu) {
     urlOnOff = null;
 } else { //simu
     base = conf.ctes.IP_INCSE + '~/in-cse/in-name/';
-    url_cmd = base + 'NavCommands/Data';
-    url_sensors = base + 'NavSensors/Data';
-    urlOnOff = base + 'NavStartStop/Data';
+    url_cmd = base + 'NavCommands/DATA';
+    url_sensors = base + 'NavSensors/DATA';
+    urlOnOff = base + 'NavStartStop/DATA';
+	urlLink = base + 'NavLink/DATA';
 }
 console.log(" base: " + base + "\n url_cmd: " + url_cmd + "\n url_sensors: " + url_sensors);
 /*var url_cmd = 'http://192.168.43.195:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_CMD/';
@@ -22,6 +23,7 @@ var base = 'http://192.168.43.195:8080/~/in-cse/in-name/MOBILITY_LAB/'
 */
 
 var cin = 'la';
+
 /* Rq :
      XMLHttpRequest is a built-in object in web browsers.
 It is not distributed with Node; you have to install it separately, 
@@ -44,7 +46,7 @@ module.exports = {
         if (!(conf.ctes.isSimu == 2)) {
             var xhr = new XMLHttpRequest();
             //envoyer des requetes de façon synchrone si false asynchrone autrement (best)
-            xhr.open('GET', url_sensors, true);
+            xhr.open('GET', url_sensors+"/la", true);
             xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
             xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
             xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');
@@ -58,18 +60,21 @@ module.exports = {
             xhr.onload = function () {
                 if (xhr.status != 200) { // analyze HTTP status of the response
                     console.log(`Error $ {
-                              xhr.status
+                              `+ xhr.status +`
                           }
                           : + $ {
                               xhr.statusText
                           }`); //  e.g. 404: Not Found
                 } else {
-                    rep = xhr.response;
+                    rep = xhr.responseText;
+					//console.log(rep) ;
                     //alert(rep);
-                    rep = rep.replace(regex, '<');
+                    //rep = rep.replace(regex, '<');
                     rep = rep.split('<con>');
-                    console.log(rep[1]);
-                    var dataShuttle = JSON.parse(rep[1]);
+					rep2 = rep[1].split('</con>');
+					rep3 = rep2[0].replace(/&quot;/g, '"');
+                    console.log("rep3 : " + rep3);
+                    var dataShuttle = JSON.parse(rep3);
                     coord = {
                         x: dataShuttle.x,
                         y: dataShuttle.y
@@ -253,9 +258,11 @@ module.exports = {
         //TODO:WORK_DENIS how to modify steer and angle from command of website :@IN/NavCommands/Data --> speed + steer, info stockées au format json
         var body;
         if (!conf.ctes.isSimu) {
-            body = "<m2m:cin xmlns:m2m='http://www.onem2m.org/xml/protocols'><cnf>" + cnf + "</cnf><con>" + content + "</con></m2m:cin>";
+			body = "<m2m:cin xmlns:m2m='http://www.onem2m.org/xml/protocols'><cnf>" + cnf + "</cnf><con>" + content + "</con></m2m:cin>";
+            url_final = url_cmd ;
         } else {
-            body = "à remplir ! ";
+			body = "<m2m:cin xmlns:m2m='http://www.onem2m.org/xml/protocols'><cnf>" + cnf + "</cnf><con>" + content + "</con><lbl>pilot</lbl></m2m:cin>";
+            url_final = urlLink ;
         }
         //fail
         /* xhr.ontimeout = function () {
@@ -291,7 +298,7 @@ module.exports = {
             res.write('{"data":"false"}');
             res.end();
         };
-        xhr.open('POST', url_cmd, true);
+        xhr.open('POST', url_final, true);
 
         //xhr.timeout = 500; //fail
         //timeout au bout de 2s
