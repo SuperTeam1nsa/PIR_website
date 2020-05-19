@@ -14,7 +14,7 @@ if (!conf.ctes.isSimu) {
     url_cmd = base + 'NavCommands/DATA';
     url_sensors = base + 'NavSensors/DATA';
     urlOnOff = base + 'NavStartStop/DATA';
-	urlLink = base + 'NavLink/DATA';
+    urlLink = base + 'NavLink/DATA';
 }
 console.log(" base: " + base + "\n url_cmd: " + url_cmd + "\n url_sensors: " + url_sensors);
 /*var url_cmd = 'http://192.168.43.195:8080/~/in-cse/in-name/MOBILITY_LAB/NAV_CMD/';
@@ -46,7 +46,7 @@ module.exports = {
         if (!(conf.ctes.isSimu == 2)) {
             var xhr = new XMLHttpRequest();
             //envoyer des requetes de façon synchrone si false asynchrone autrement (best)
-            xhr.open('GET', url_sensors+"/la", true);
+            xhr.open('GET', url_sensors + "/la", true);
             xhr.setRequestHeader('Access-Control-Allow-Headers', '*');
             xhr.setRequestHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS, PUT, DELETE');
             xhr.setRequestHeader('Access-Control-Allow-Credentials', 'true');
@@ -60,24 +60,25 @@ module.exports = {
             xhr.onload = function () {
                 if (xhr.status != 200) { // analyze HTTP status of the response
                     console.log(`Error $ {
-                              `+ xhr.status +`
+                              ` + xhr.status + `
                           }
                           : + $ {
                               xhr.statusText
                           }`); //  e.g. 404: Not Found
                 } else {
                     rep = xhr.responseText;
-					//console.log(rep) ;
+                    //console.log(rep) ;
                     //alert(rep);
                     //rep = rep.replace(regex, '<');
                     rep = rep.split('<con>');
-					rep2 = rep[1].split('</con>');
-					rep3 = rep2[0].replace(/&quot;/g, '"');
+                    rep2 = rep[1].split('</con>');
+                    rep3 = rep2[0].replace(/&quot;/g, '"');
                     console.log("rep3 : " + rep3);
                     var dataShuttle = JSON.parse(rep3);
                     coord = {
-                        x: dataShuttle.x,
-                        y: dataShuttle.y
+                        //(data * ratio max_y/ max_y_PID)-ini_y_PID+ini_y;//qd pas précisé valeurs de config.js pour la map
+                        x: (dataShuttle.x * (245.0 / 150.0)) - 30 + 75,
+                        y: (dataShuttle.y * (20.0 / 100.0)) - 50 + 182
                     };
                 };
             };
@@ -258,11 +259,11 @@ module.exports = {
         //TODO:WORK_DENIS how to modify steer and angle from command of website :@IN/NavCommands/Data --> speed + steer, info stockées au format json
         var body;
         if (!conf.ctes.isSimu) {
-			body = "<m2m:cin xmlns:m2m='http://www.onem2m.org/xml/protocols'><cnf>" + cnf + "</cnf><con>" + content + "</con></m2m:cin>";
-            url_final = url_cmd ;
+            body = "<m2m:cin xmlns:m2m='http://www.onem2m.org/xml/protocols'><cnf>" + cnf + "</cnf><con>" + content + "</con></m2m:cin>";
+            url_final = url_cmd;
         } else {
-			body = "<m2m:cin xmlns:m2m='http://www.onem2m.org/xml/protocols'><cnf>" + cnf + "</cnf><con>" + content + "</con><lbl>pilot</lbl></m2m:cin>";
-            url_final = urlLink ;
+            body = "<m2m:cin xmlns:m2m='http://www.onem2m.org/xml/protocols'><cnf>" + cnf + "</cnf><con>" + content + "</con><lbl>pilot</lbl></m2m:cin>";
+            url_final = urlLink;
         }
         //fail
         /* xhr.ontimeout = function () {
