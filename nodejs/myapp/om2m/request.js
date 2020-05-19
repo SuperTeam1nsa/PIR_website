@@ -76,9 +76,9 @@ module.exports = {
                     console.log("rep3 : " + rep3);
                     var dataShuttle = JSON.parse(rep3);
                     coord = {
-                        //(data * ratio max_y/ max_y_PID)-ini_y_PID+ini_y;//qd pas précisé valeurs de config.js pour la map
-                        x: (dataShuttle.x * (245.0 / 150.0)) - 30 + 75,
-                        y: (dataShuttle.y * (20.0 / 100.0)) - 50 + 182
+                        //((data-ini_y_PID) * ratio max_y/ max_y_PID)+ini_y;//qd pas précisé valeurs de config.js pour la map
+                        x: ((dataShuttle.x - 30) * (245.0 / 150.0)) + 75,
+                        y: ((dataShuttle.y - 50) * (20.0 / 100.0)) + 182
                     };
                 };
             };
