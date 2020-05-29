@@ -3,6 +3,18 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+/*
+PWA way :https://app-manifest.firebaseapp.com/
+https://codelabs.developers.google.com/codelabs/your-first-pwapp/#3
+https://www.eurateach.com/formation-developpement-lille/tutoriel-html-creer-progressive-web-app/
+http://blog.occ.simplon.co/pwa/
+https://blog.eleven-labs.com/fr/votre-premiere-pwa/
++F12 lighthouse chrome
+//installation
+https://fossbytes.com/windows-10-install-pwa-website-edge-chromium/
+https://web.dev/codelab-make-installable/
+//need https (so I let you add cache and https option support) on android:add to -> homescreen => webapp free
+
 //Next time use a better generator :https://github.com/cdimascio/generator-express-no-stress
 //all express +
 //#Babel (auto js new gen retrocompatibility), ESLint true js debug, piano #good log

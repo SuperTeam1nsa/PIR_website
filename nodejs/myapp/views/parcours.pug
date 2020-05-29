@@ -1,17 +1,26 @@
-doctype html
+doctype html lang="fr" xml:lang="fr" xmlns="http://www.w3.org/1999/xhtml"
 head
   meta(charset='utf-8')
   meta(name='viewport' content='width=device-width, initial-scale=1, shrink-to-fit=no')
-  meta(name='description' content='')
-  meta(name='author' content='')
+  meta(name='description' content='A good bus to INSA openday')
+  meta(name='author' content='RF, fache@etud.insa-toulouse.fr')
+  meta(name='theme-color' content='#2F3BA')
+  //more immersive
+  //Add iOS meta tags and icons
+  meta(name="apple-mobile-web-app-capable" content="yes")
+  meta(name="apple-mobile-web-app-status-bar-style" content="black")
+  meta(name="apple-mobile-web-app-title" content="GOINSA")
+  link(rel="apple-touch-icon" href=URL+'/images/icons/icon-152x152.png') 
   //Pug gère :img(src=`/images/${sensor}.png`, style="width:20%")
   //<div id=#{sensor} style="width:90%;height:250px;">
   //body(onload="initTemp('"+ sensor +"')")
   link(rel='icon' href=URL+'images/bus.png')
+  //to add in each page for PWA
+  link(rel='manifest' href=URL+'/manifest.json')
   title #{title}
   link(href='https://stackpath.bootstrapcdn.com/bootswatch/4.3.1/cerulean/bootstrap.min.css' rel='stylesheet' integrity='sha384-C++cugH8+Uf86JbNOnQoBweHHAe/wVKN/mb0lTybu/NZ9sEYbd+BbbYtNpWYAsNP' crossorigin='anonymous')
   // Bootstrap core CSS
-  link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
+  //link(rel='stylesheet' href='https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css' integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous')
   // Place your stylesheet here
   link(href=URL+'/stylesheets/style.css' rel='stylesheet' type='text/css')
   body(onkeydown="keyCode(event)")
